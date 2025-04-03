@@ -1,3 +1,10 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const preguntaCargar = generarPreguntaNivel1();
+    const divPregunta = document.getElementById("pregunta");
+    divPregunta.textContent = preguntaCargar.enunciado;
+});
+  
+
 function generarPreguntaNivel1() {
     // let pregunta = "";
     // const digitos = "0123456789";
@@ -13,6 +20,8 @@ function generarPreguntaNivel1() {
         respuestas,
         correcta: 0
     };
+
+    return pregunta;
 }
 
 function generarPreguntaNivel2() {
