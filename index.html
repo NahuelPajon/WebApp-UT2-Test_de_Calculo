@@ -5,36 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test de Calculo</title>
     <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body> 
+
     <aside>
         <div class="listaPreguntas">
+            <h3>Lista de preguntas</h3>
             <ul>
-                <li><button id="boton1">Pregunta 1</button></li>
-                <li><button id="boton1">Pregunta 1</button></li>
                 <li><button id="boton1">Pregunta 1</button></li>
             </ul>
         </div>
     </aside>
     
-    <div class="pregunta">
-        <h1>Pregunta</h1>
-    </div>
 
-    <div class="respuestas">
-        <div id="primeraFila">
-            <button id="respuesta1">Respuesta 1</button>
-            <button id="respuesta2">Respuesta 2</button>
+    <main class="quiz">
+        <div id="pregunta" class="Pregunta">Pregunta</div>
+        <div class="respuestas">
+            <button class="respuesta">Respuesta 1</button>
+            <button class="respuesta">Respuesta 2</button>
+            <button class="respuesta">Respuesta 3</button>
+            <button class="respuesta">Respuesta 4</button>
         </div>
-        <div id="segundaFila">
-            <button id="respuesta3">Respuesta 3</button>
-            <button id="respuesta4">Respuesta 4</button>
-        </div>     
-    </div>
-
-    <div class="boton siguiente">
-        <button id="siguiente">Siguiente</button>
-    </div>
+        <button class="siguiente" disabled>SIGUIENTE PREGUNTA →</button>  
+    </main>
 
 
 
