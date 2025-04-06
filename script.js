@@ -1,3 +1,99 @@
+// import {
+//   generarPreguntaNivel1,
+//   generarPreguntaNivel2,
+//   generarPreguntaNivel3,
+//   generarPreguntaNivel4,
+//   getRandom,
+// } from "./PreguntasNiveles.js";
+
+// let respuestaSeleccionada = null;
+
+// document.addEventListener("DOMContentLoaded", () => {
+//   cargarNuevaPregunta();
+// });
+
+// function mezclarRespuestas(preguntaCargar) {
+//   const { divPregunta, listaRespuestas } = preguntasRespuestasDocument();
+
+//   const respuestasShuffled = preguntaCargar.respuestas
+//     .map((value) => ({ value, sort: Math.random() }))
+//     .sort((a, b) => a.sort - b.sort)
+//     .map(({ value }) => value);
+
+//   divPregunta.textContent = preguntaCargar.enunciado;
+
+//   listaRespuestas.forEach((btn, index) => {
+//     btn.textContent = respuestasShuffled[index];
+//     btn.classList.remove("seleccionado"); // limpiar selección anterior
+//   });
+
+//   respuestaSeleccionada = null; // resetear
+// }
+
+// document.addEventListener("click", CargarYVerificarRespuesta);
+
+// function CargarYVerificarRespuesta(event) {
+//   const { listaRespuestas } = preguntasRespuestasDocument();
+
+//   const botonSiguiente = document.getElementById("siguiente");
+
+//   if (listaRespuestas.includes(event.target)) {
+//     // Quitar selección previa
+//     listaRespuestas.forEach((btn) => btn.classList.remove("seleccionado"));
+
+//     // Marcar como seleccionada visualmente
+//     event.target.classList.add("seleccionado");
+
+//     // Guardar respuesta seleccionada
+//     respuestaSeleccionada = parseInt(event.target.textContent);
+
+//     botonSiguiente.disabled = false; // habilitar el botón "Siguiente"
+//   }
+
+//   document.getElementById("siguiente").addEventListener("click", () => {
+//     const { divPregunta } = preguntasRespuestasDocument();
+
+//     const [num1, , num2] = divPregunta.textContent.split(" ");
+//     const correcta = parseInt(num1) + parseInt(num2);
+
+//     if (respuestaSeleccionada === correcta) {
+//       alert("¡Correcto!"); // TODO: agregar un <p> o <h3> para mostrar el mensaje en la pantalla
+//     } else {
+//       alert("Incorrecto. La respuesta correcta es: " + correcta); // TODO: agregar un <p> o <h3> para mostrar el mensaje en la pantalla
+//     }
+
+//     // TODO: limpiar y cargar nueva pregunta
+//     cargarNuevaPregunta();
+//   });
+// }
+
+// function preguntasRespuestasDocument() {
+//   const divPregunta = document.getElementById("pregunta");
+//   const divRespuesta1 = document.getElementById("respuesta1");
+//   const divRespuesta2 = document.getElementById("respuesta2");
+//   const divRespuesta3 = document.getElementById("respuesta3");
+//   const divRespuesta4 = document.getElementById("respuesta4");
+
+//   const listaRespuestas = [
+//     divRespuesta1,
+//     divRespuesta2,
+//     divRespuesta3,
+//     divRespuesta4,
+//   ];
+
+//   return {
+//     divPregunta,
+//     listaRespuestas,
+//   };
+// }
+
+// function cargarNuevaPregunta() {
+//   const preguntaCargar = generarPreguntaNivel1(); // cambiamos a la función de nivel que queramos
+//   // TODO: que a medida que se avanza de nivel, se carguen preguntas más difíciles
+//   mezclarRespuestas(preguntaCargar);
+//   document.getElementById("siguiente").disabled = true; // deshabilito el botón "siguiente" al cargar una nueva pregunta
+// }
+
 import {
   generarPreguntaNivel1,
   generarPreguntaNivel2,
@@ -6,10 +102,30 @@ import {
   getRandom,
 } from "./PreguntasNiveles.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const preguntaCargar = generarPreguntaNivel1();
+let respuestaSeleccionada = null;
 
-  mezclarRespuestas(preguntaCargar);
+document.addEventListener("DOMContentLoaded", () => {
+  const botonSiguiente = document.getElementById("siguiente");
+
+  cargarNuevaPregunta();
+
+  botonSiguiente.addEventListener("click", () => {
+    const { divPregunta } = preguntasRespuestasDocument();
+
+    if (respuestaSeleccionada === null) return; // no se seleccionó nada
+
+    const [num1, , num2] = divPregunta.textContent.split(" ");
+    const correcta = parseInt(num1) + parseInt(num2);
+
+    if (respuestaSeleccionada === correcta) {
+      alert("¡Correcto!"); // TODO: agregar un <p> o <h3> para mostrar el mensaje en la pantalla
+    } else {
+      alert("Incorrecto. La respuesta correcta es: " + correcta); // TODO: agregar un <p> o <h3> para mostrar el mensaje en la pantalla
+    }
+
+    // limpiar y cargar nueva pregunta
+    cargarNuevaPregunta();
+  });
 });
 
 function mezclarRespuestas(preguntaCargar) {
@@ -21,50 +137,48 @@ function mezclarRespuestas(preguntaCargar) {
     .map(({ value }) => value);
 
   divPregunta.textContent = preguntaCargar.enunciado;
-  listaRespuestas.forEach((div, index) => {
-    div.textContent = respuestasShuffled[index];
+
+  listaRespuestas.forEach((btn, index) => {
+    btn.textContent = respuestasShuffled[index];
+    btn.classList.remove("seleccionado"); // limpiar selección anterior
   });
+
+  respuestaSeleccionada = null; // resetear
 }
 
-document.addEventListener("click", CargarYVerificarRespuesta);
+document.addEventListener("click", (event) => {
+  const { listaRespuestas } = preguntasRespuestasDocument();
+  const botonSiguiente = document.getElementById("siguiente");
 
-function CargarYVerificarRespuesta(event) {
-  const { divPregunta, listaRespuestas } = preguntasRespuestasDocument();
+  if (listaRespuestas.includes(event.target)) {
+    // sacamos selección previa
+    listaRespuestas.forEach((btn) => btn.classList.remove("seleccionado"));
 
-  if (
-    event.target === listaRespuestas[0] ||
-    event.target === listaRespuestas[1] ||
-    event.target === listaRespuestas[2] ||
-    event.target === listaRespuestas[3]
-  ) {
-    const respuestaSeleccionada = parseInt(event.target.textContent);
-    const correcta =
-      parseInt(divPregunta.textContent.split(" ")[0]) +
-      parseInt(divPregunta.textContent.split(" ")[2]);
-    if (respuestaSeleccionada === correcta) {
-      alert("¡Correcto!"); // TODO: agregar un <p> o <h3> para mostrar el mensaje en la pantalla
-    } else {
-      alert("Incorrecto. La respuesta correcta es: " + correcta); // TODO: agregar un <p> o <h3> para mostrar el mensaje en la pantalla
-    }
+    // se marca como seleccionada visualmente con css
+    event.target.classList.add("seleccionado");
+
+    // se guarda la respuesta seleccionada
+    respuestaSeleccionada = parseInt(event.target.textContent);
+
+    botonSiguiente.disabled = false; // habilitar el botón "Siguiente" para pasar a la siguiente pregunta
   }
-}
+});
 
 function preguntasRespuestasDocument() {
   const divPregunta = document.getElementById("pregunta");
-  const divRespuesta1 = document.getElementById("respuesta1");
-  const divRespuesta2 = document.getElementById("respuesta2");
-  const divRespuesta3 = document.getElementById("respuesta3");
-  const divRespuesta4 = document.getElementById("respuesta4");
-
   const listaRespuestas = [
-    divRespuesta1,
-    divRespuesta2,
-    divRespuesta3,
-    divRespuesta4,
+    document.getElementById("respuesta1"),
+    document.getElementById("respuesta2"),
+    document.getElementById("respuesta3"),
+    document.getElementById("respuesta4"),
   ];
 
-  return {
-    divPregunta,
-    listaRespuestas,
-  };
+  return { divPregunta, listaRespuestas };
+}
+
+function cargarNuevaPregunta() {
+  const preguntaCargar = generarPreguntaNivel1(); // más adelante podés alternar niveles4
+  // TODO: que a medida que se avanza de nivel, se carguen preguntas más difíciles
+  mezclarRespuestas(preguntaCargar);
+  document.getElementById("siguiente").disabled = true;
 }
