@@ -8,6 +8,9 @@ import {
 
 let respuestaSeleccionada = null;
 
+let contadorPreguntas = 0; // contador de preguntas
+let preguntasHistorial = []; // array para guardar las preguntas generadas
+
 document.addEventListener("DOMContentLoaded", () => {
   const botonSiguiente = document.getElementById("siguiente");
 
@@ -85,4 +88,15 @@ function cargarNuevaPregunta() {
   // TODO: que a medida que se avanza de nivel, se carguen preguntas más difíciles
   mezclarRespuestas(preguntaCargar);
   document.getElementById("siguiente").disabled = true;
+//   contadorPreguntas++;
+//   preguntasHistorial.push(preguntaCargar); // guardar pregunta en el historial
+//   preguntaALista(); // agregar pregunta a la lista de preguntas
+}
+
+function preguntaALista() {
+  let botonPregunta = document.createElement("button");
+  botonPregunta.textContent = "Pregunta " + contadorPreguntas;
+  botonPregunta.classList.add("boton-lista");
+  botonPregunta.id = "boton" + contadorPreguntas;
+  $("#listaPreguntasConBotones").appendChild(botonPregunta);
 }
