@@ -110,3 +110,11 @@ button[class^="respuesta"]:hover {
     background: #ccc;
     cursor: not-allowed;
 }
+
+.correcta {
+    background-color: #2ecc71 !important;
+}
+
+.incorrecta {
+    background-color: #e74c3c !important; 
+}

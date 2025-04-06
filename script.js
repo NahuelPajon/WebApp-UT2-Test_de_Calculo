@@ -1,66 +1,181 @@
+let preguntas = [];
+let nivel = 1;
+let totalPreguntasRespondidas = 0;
+const preguntasPorNivel = 5;
+let preguntaActual = 0;
+let yaRespondida = false;
+
 document.addEventListener("DOMContentLoaded", () => {
-    const preguntaCargar = generarPreguntaNivel1();
-    const divPregunta = document.getElementById("pregunta");
-    divPregunta.textContent = preguntaCargar.enunciado;
+    cargarNuevaPregunta();
+
+    document.querySelector(".siguiente").addEventListener("click", () => {
+        if (!yaRespondida) return; 
+    
+        const siguienteIndex = preguntaActual + 1;
+    
+        if (siguienteIndex < preguntas.length) {
+            mostrarPregunta(preguntas[siguienteIndex], siguienteIndex);
+            return;
+        }
+    
+        totalPreguntasRespondidas++;
+        if (totalPreguntasRespondidas % preguntasPorNivel === 0) {
+            nivel = Math.min(nivel + 1, 4);
+        }
+    
+        cargarNuevaPregunta();
+    });
+    
 });
-  
+
+function cargarNuevaPregunta() {
+    const pregunta = generarPreguntaPorNivel(nivel);
+    preguntas.push(pregunta);
+    const nuevaIndex = preguntas.length - 1;
+    mostrarPregunta(pregunta, nuevaIndex);
+    agregarAlSidebar(nuevaIndex);
+}
+
+
+function mostrarPregunta(pregunta, index) {
+    preguntaActual = index;
+    yaRespondida = pregunta.respondida || false;
+
+    document.getElementById("pregunta").textContent = `Pregunta ${index + 1}: ${pregunta.enunciado}`;
+
+    pregunta.respuestas.forEach((respuesta, i) => {
+        const boton = document.querySelector(`.respuesta${i + 1}`);
+        boton.textContent = respuesta;
+        boton.className = `respuesta${i + 1}`; 
+
+        if (yaRespondida) {
+            boton.disabled = true;
+            if (i === pregunta.seleccionada) {
+                boton.classList.add(pregunta.correcta === i ? "correcta" : "incorrecta");
+            }
+        } else {
+            boton.disabled = false;
+            boton.onclick = () => responder(pregunta, i);
+        }
+    });
+
+    if (yaRespondida) {
+        activarBotonSiguiente();
+    } else {
+        desactivarBotonSiguiente();
+    }
+}
+
+function responder(pregunta, seleccion) {
+    if (yaRespondida) return;
+
+    yaRespondida = true;
+    pregunta.respondida = true;
+    pregunta.seleccionada = seleccion;
+
+    const correcta = pregunta.correcta;
+
+    for (let i = 0; i < 4; i++) {
+        const btn = document.querySelector(`.respuesta${i + 1}`);
+        btn.disabled = true;
+
+        if (i === correcta) {
+            btn.classList.add("correcta");
+        }
+        if (i === seleccion && i !== correcta) {
+            btn.classList.add("incorrecta");
+        }
+        
+    }
+
+    actualizarEstadoSidebar(preguntas.length - 1, correcta === seleccion);
+    activarBotonSiguiente();
+}
+
+function agregarAlSidebar(index) {
+    if (document.getElementById(`sidebar-${index}`)) return;
+
+    const lista = document.querySelector(".listaPreguntas ul");
+    const li = document.createElement("li");
+    const boton = document.createElement("button");
+
+    boton.textContent = `Pregunta ${index + 1}`;
+    boton.id = `sidebar-${index}`;
+
+    boton.addEventListener("click", () => {
+        mostrarPregunta(preguntas[index], index);
+    });
+
+    li.appendChild(boton);
+    lista.appendChild(li);
+}
+
+
+
+function actualizarEstadoSidebar(index, correcto) {
+    const boton = document.getElementById(`sidebar-${index}`);
+    if (!boton) return;
+    boton.textContent = `Pregunta ${index + 1} ${correcto ? "✔️" : "❌"}`;
+}
+
+function activarBotonSiguiente() {
+    document.querySelector(".siguiente").disabled = false;
+}
+
+function desactivarBotonSiguiente() {
+    document.querySelector(".siguiente").disabled = true;
+}
+
+function generarPreguntaPorNivel(nivel) {
+    switch (nivel) {
+        case 1: return generarPreguntaNivel1();
+        case 2: return generarPreguntaNivel2();
+        case 3: return generarPreguntaNivel3();
+        case 4: return generarPreguntaNivel4();
+    }
+}
 
 function generarPreguntaNivel1() {
-    // let pregunta = "";
-    // const digitos = "0123456789";
-    //const operadores = "+-*/";
-    // const indiceOperador = Math.floor(Math.random() * 4);
-    // const operadorRandom = operadores[indiceOperador];
-    let primerNum = Math.floor(Math.random() * (9) + 1);
-    let segundoNum = Math.floor(Math.random() * (9) + 1);
-    const operador = "+";
-    let respuestas = [primerNum + segundoNum, primerNum - 3 + segundoNum, primerNum + 5 + segundoNum, primerNum - 8 + segundoNum];
-    const pregunta = {
-        enunciado: `${primerNum} ${operador} ${segundoNum}`,
-        respuestas,
-        correcta: 0
-    };
-
-    return pregunta;
+    let a = getRandom(1, 9), b = getRandom(1, 9);
+    return crearPregunta(a, b, "+");
 }
 
 function generarPreguntaNivel2() {
-    let primerNum = Math.floor(Math.random() * (50) + 1);
-    let segundoNum = Math.floor(Math.random() * (25) + 1);
-    const operador = "+";
-    let respuestas = [primerNum + segundoNum, primerNum - 3 + segundoNum, primerNum + 5 + segundoNum, primerNum - 8 + segundoNum];
-    const pregunta = {
-        enunciado: `${primerNum} ${operador} ${segundoNum}`,
-        respuestas,
-        correcta: 0
-    };
+    let a = getRandom(10, 50), b = getRandom(10, 25);
+    return crearPregunta(a, b, "+");
 }
 
 function generarPreguntaNivel3() {
-    let primerNum = getRandom(5, 500);
-    let segundoNum = getRandom(1, 100);
-    const operador = "+";
-    let respuestas = [primerNum + segundoNum, primerNum - 3 + segundoNum, primerNum + 5 + segundoNum, primerNum - 8 + segundoNum];
-    const pregunta = {
-        enunciado: `${primerNum} ${operador} ${segundoNum}`,
-        respuestas,
-        correcta: 0
-    };
+    let a = getRandom(50, 500), b = getRandom(25, 100);
+    return crearPregunta(a, b, "+");
 }
 
 function generarPreguntaNivel4() {
-    let primerNum = getRandom(500, 1200);
-    let segundoNum = getRandom(100, 500);
-    const operador = "+";
-    let correcta = primerNum + segundoNum;
-    let respuestas = [correcta, primerNum + getRandom(25, 100) + segundoNum, primerNum - getRandom(25, 100) + segundoNum, primerNum - getRandom(25, 100) + segundoNum];
-    const pregunta = {
-        enunciado: `${primerNum} ${operador} ${segundoNum}`,
+    let a = getRandom(500, 1200), b = getRandom(100, 500);
+    return crearPregunta(a, b, "+");
+}
+
+function crearPregunta(a, b, operador) {
+    const correcta = a + b;
+    let respuestas = [
+        correcta,
+        correcta + getRandom(1, 10),
+        correcta - getRandom(1, 10),
+        correcta + getRandom(10, 20),
+    ];
+
+    respuestas = mezclarArray(respuestas);
+    return {
+        enunciado: `${a} ${operador} ${b}`,
         respuestas,
-        correcta: 0
+        correcta: respuestas.indexOf(correcta),
     };
 }
 
 function getRandom(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function mezclarArray(arr) {
+    return arr.sort(() => Math.random() - 0.5);
 }
