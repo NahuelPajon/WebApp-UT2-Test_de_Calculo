@@ -137,26 +137,56 @@ function generarPreguntaPorNivel(nivel) {
 
 function generarPreguntaNivel1() {
     let a = getRandom(1, 9), b = getRandom(1, 9);
-    return crearPregunta(a, b, "+");
+    const operadores = ['+', '-'];
+    let posOperador = getRandom(0, 1);
+    return crearPregunta(a, b, operadores[posOperador]);
 }
 
 function generarPreguntaNivel2() {
     let a = getRandom(10, 50), b = getRandom(10, 25);
-    return crearPregunta(a, b, "+");
+    const operadores = ['+', '-', '*'];
+    let posOperador = getRandom(0, 2);
+    return crearPregunta(a, b, operadores[posOperador]);
 }
 
 function generarPreguntaNivel3() {
     let a = getRandom(50, 500), b = getRandom(25, 100);
-    return crearPregunta(a, b, "+");
+    const operadores = ['+', '-', '*', '/'];
+    let posOperador = getRandom(0, 3);
+    return crearPregunta(a, b, operadores[posOperador]);
 }
 
 function generarPreguntaNivel4() {
-    let a = getRandom(500, 1200), b = getRandom(100, 500);
-    return crearPregunta(a, b, "+");
+    let a = getRandom(500, 1200), b = getRandom(100, 300);
+    const operadores = ['+', '-', '*', '/', '**', '%'];
+    let posOperador = getRandom(0, 5);
+    return crearPregunta(a, b, operadores[posOperador]);
 }
 
 function crearPregunta(a, b, operador) {
-    const correcta = a + b;
+    let correcta = 0;
+    switch (operador) {
+        case '+':
+            correcta = a + b;
+            break;
+        case '-':
+            correcta = a - b;
+            break;
+        case '*':
+            correcta = a * b;
+            break;
+        case '/':
+            a = a * b;
+            correcta = a / b;
+            break;
+        case '**':
+            correcta = a ** b;
+            break;
+        case '%':
+            correcta = a % b;
+            break;
+    }
+
     let respuestas = [
         correcta,
         correcta + getRandom(1, 10),
