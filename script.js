@@ -140,44 +140,41 @@ function generarPreguntaPorNivel(nivel) {
 }
 
 function generarPreguntaNivel1() {
-  let a = getRandom(1, 9),
-    b = getRandom(1, 9);
-  const operador = operadores.charAt(getRandom(0, 3));
-  return crearPregunta(a, b, operador);
+    let a = getRandom(1, 9), b = getRandom(1, 9);
+    const operadores = ['+', '-'];
+    let posOperador = getRandom(0, 1);
+    return crearPregunta(a, b, operadores[posOperador]);
 }
 
 function generarPreguntaNivel2() {
-  let a = getRandom(10, 50),
-    b = getRandom(10, 25);
-    const operador = operadores.charAt(getRandom(0, 3));
-  return crearPregunta(a, b, operador);
+    let a = getRandom(10, 50), b = getRandom(10, 25);
+    const operadores = ['+', '-', '*'];
+    let posOperador = getRandom(0, 2);
+    return crearPregunta(a, b, operadores[posOperador]);
 }
 
 function generarPreguntaNivel3() {
-  let a = getRandom(50, 500),
-    b = getRandom(25, 100);
-    const operador = operadores.charAt(getRandom(0, 3));
-  return crearPregunta(a, b, operador);
+    let a = getRandom(50, 500), b = getRandom(25, 100);
+    const operadores = ['+', '-', '*', '/'];
+    let posOperador = getRandom(0, 3);
+    return crearPregunta(a, b, operadores[posOperador]);
 }
 
 function generarPreguntaNivel4() {
-  let a = getRandom(500, 1200),
-    b = getRandom(100, 500);
-    const operador = operadores.charAt(getRandom(0, 3));
-  return crearPregunta(a, b, operador);
+    let a = getRandom(500, 1200), b = getRandom(100, 300);
+    const operadores = ['+', '-', '*', '/', '**', '%'];
+    let posOperador = getRandom(0, 5);
+    return crearPregunta(a, b, operadores[posOperador]);
 }
 
 function crearPregunta(a, b, operador) {
-  let correcta = `${a} ${operador} ${b}`;
-  correcta = eval(correcta);
-  const min = correcta - 10;
-  const max = correcta + 10;
-  let respuestas = [
-    correcta,
-    getRandom(min, max),
-    getRandom(min, max),
-    getRandom(min, max),
-  ];
+    const correcta = a + b;
+    let respuestas = [
+        correcta,
+        correcta + getRandom(1, 10),
+        correcta - getRandom(1, 10),
+        correcta + getRandom(10, 20),
+    ];
 
   respuestas = mezclarArray(respuestas);
   return {
