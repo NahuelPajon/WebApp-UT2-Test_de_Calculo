@@ -172,12 +172,15 @@ function generarPreguntaNivel4() {
 }
 
 function crearPregunta(a, b, operador) {
-  const correcta = a + b;
+  let correcta = `${a} ${operador} ${b}`;
+  correcta = eval(correcta); // evaluar la expresión para obtener el resultado correcto
+  let min = correcta - 10;
+    let max = correcta + 10;
   let respuestas = [
     correcta,
-    correcta + getRandom(1, 10),
-    correcta - getRandom(1, 10),
-    correcta + getRandom(10, 20),
+    getRandom(min, max),
+    getRandom(min, max),
+    getRandom(min, max),
   ];
 
   respuestas = mezclarArray(respuestas);
