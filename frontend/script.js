@@ -6,27 +6,36 @@ let preguntaActual = 0;
 let yaRespondida = false;
 const operadores = "+-*/";
 
-document.addEventListener("DOMContentLoaded", () => {
-  cargarNuevaPregunta();
+document.addEventListener("DOMContentLoaded", async () => {
+  await getPreguntas();
+
+  if (preguntas.length === 0) {
+    cargarNuevaPregunta();
+  } else {
+    mostrarPregunta(preguntas[preguntas.length-1], preguntas.length-1);
+  }
 
   document.querySelector(".siguiente").addEventListener("click", () => {
-    if (!yaRespondida) return;
-
-    const siguienteIndex = preguntaActual + 1;
-
-    if (siguienteIndex < preguntas.length) {
-      mostrarPregunta(preguntas[siguienteIndex], siguienteIndex);
-      return;
-    }
-
-    totalPreguntasRespondidas++;
-    if (totalPreguntasRespondidas % preguntasPorNivel === 0) {
-      nivel = Math.min(nivel + 1, 4);
-    }
-
+    clicAlSiguiente();
     cargarNuevaPregunta();
   });
 });
+
+function clicAlSiguiente() {
+  if (!yaRespondida) return;
+
+  const siguienteIndex = preguntaActual + 1;
+
+  if (siguienteIndex < preguntas.length) {
+    mostrarPregunta(preguntas[siguienteIndex], siguienteIndex);
+    return;
+  }
+
+  totalPreguntasRespondidas++;
+  if (totalPreguntasRespondidas % preguntasPorNivel === 0) {
+    nivel = Math.min(nivel + 1, 4);
+  }
+}
 
 function cargarNuevaPregunta() {
   const pregunta = generarPreguntaPorNivel(nivel);
@@ -92,6 +101,32 @@ function responder(pregunta, seleccion) {
 
   actualizarEstadoSidebar(preguntas.length - 1, correcta === seleccion);
   activarBotonSiguiente();
+  postPregunta(pregunta);
+}
+
+async function postPregunta(pregunta) {
+  await fetch("http://localhost:3000/preguntas", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ pregunta }),
+  })
+    .then((response) => response.json())
+    .catch((error) => console.error("Error:", error));
+}
+
+async function getPreguntas() {
+  await fetch("http://localhost:3000/preguntas")
+    .then((response) => response.json())
+    .then((data) => {
+      for (let i = 0; i < data.length; i++) {
+        preguntas[i] = data[i].pregunta;
+        agregarAlSidebar(i);
+        actualizarEstadoSidebar(i, preguntas[i].correcta);
+      }
+    })
+    .catch((error) => console.error("Error:", error));
 }
 
 function agregarAlSidebar(index) {
@@ -175,7 +210,7 @@ function crearPregunta(a, b, operador) {
   let correcta = `${a} ${operador} ${b}`;
   correcta = eval(correcta); // evaluar la expresión para obtener el resultado correcto
   let min = correcta - 10;
-    let max = correcta + 10;
+  let max = correcta + 10;
   let respuestas = [
     correcta,
     getRandom(min, max),

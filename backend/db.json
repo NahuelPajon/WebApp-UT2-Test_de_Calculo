@@ -1,0 +1,49 @@
+{
+  "preguntas": [
+    {
+      "id": "da56",
+      "pregunta": {
+        "enunciado": "6 - 4",
+        "respuestas": [
+          2,
+          1,
+          -2,
+          4
+        ],
+        "correcta": 0,
+        "respondida": true,
+        "seleccionada": 0
+      }
+    },
+    {
+      "id": "2fee",
+      "pregunta": {
+        "enunciado": "5 - 8",
+        "respuestas": [
+          -8,
+          -3,
+          -4,
+          1
+        ],
+        "correcta": 1,
+        "respondida": true,
+        "seleccionada": 3
+      }
+    },
+    {
+      "id": "1650",
+      "pregunta": {
+        "enunciado": "1 - 8",
+        "respuestas": [
+          -7,
+          -1,
+          -1,
+          -7
+        ],
+        "correcta": 0,
+        "respondida": true,
+        "seleccionada": 2
+      }
+    }
+  ]
+}
